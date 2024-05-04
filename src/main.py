@@ -11,13 +11,13 @@ def load_txt_data(file_path):
 
 def newlines(amount):
     for _ in range(amount):
-        st.write("")
+        st.write('')
 
 # Title and mission statement
 # -----------------------------
 
 st.title('Welcome to TraveLink')
-st.text('Our mission: Making your trip fun, meaningful, and hopefully unforgettable.')
+st.text('Our mission: Making your trips fun, meaningful, and unforgettable.')
 
 # Collect travel information
 # --------------------------
@@ -37,28 +37,28 @@ company = st.selectbox('Company Name',
 # Creating columns for the dates to appear side by side
 col1, col2 = st.columns(2)
 with col1:
-    arrival_date = st.date_input('Arrival Date', format="DD/MM/YYYY")
+    arrival_date = st.date_input('Arrival Date', format='DD/MM/YYYY')
 with col2:
-    return_date = st.date_input('Return Date', format="DD/MM/YYYY")
+    return_date = st.date_input('Return Date', format='DD/MM/YYYY')
 
 # Collect interest information
 # ----------------------------
 newlines(1)
 st.header('Tell us more about you')
 
-travel_interests = ['Relaxation', 'Sightseeing', 'Adventure', 'Any']
+moods = ['Relaxation', 'Sightseeing', 'Adventure', 'Any']
 
-# Dropdown for selecting travel interest
-travel_interest = st.selectbox('What type travel do you enjoy most?', 
-                               travel_interests)
+# Dropdown for selecting activity interest
+mood = st.selectbox('What kind of activities are you in the mood for?', 
+                    moods)
 
 # Dropdown for selecting networking interest
-networking = st.selectbox('Are you in the mood to network and meet new people?', 
-                               ["Yes", "No"])
+networking = st.selectbox('Are you looking to network and meet new people?', 
+                          ['Yes', 'No'])
 
 # Dropdown for selecting free time
 free_time = st.selectbox('What time of day are you generally free?', 
-                         ["Evenings", "Mornings"])
+                         ['Evenings', 'Mornings'])
 
 # Submission
 # ----------

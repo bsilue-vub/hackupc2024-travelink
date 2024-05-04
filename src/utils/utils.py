@@ -43,12 +43,12 @@ def get_simultaneous_travellers(df, new_traveller):
 
 if __name__ == '__main__':
     # Load dataset
-    df = pd.read_csv('./data/datasets/augmented_dataset.csv')
+    df = pd.read_csv('./src/data/datasets/augmented_dataset.csv')
 
     # Example new traveller
     new_traveller = pd.DataFrame([{
         'Arrival City': 'Paris',
-        'Departure Date': '07/11/2024',
+        'Arrival Date': '07/11/2024',
         'Return Date': '14/11/2024'
     }]).iloc[0]
 

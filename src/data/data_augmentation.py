@@ -8,7 +8,7 @@ df = pd.read_csv('./src/data/datasets/original_dataset.csv')
 # Define data options
 with open('./src/data/datasets/companies.txt', 'r') as file:
     companies_list = [line.strip() for line in file]
-travel_interests = ['Relaxation', 'Sightseeing', 'Adventure', 'Any']
+moods = ['Relaxation', 'Sightseeing', 'Adventure', 'Any']
 times = ['Mornings', 'Evenings']
 hotels = ['Hilton Hotel', 'The Hotel', 'Ibis Hotel', 'Elite Hotel', 'Novotel']
 
@@ -19,7 +19,7 @@ df['company'] = np.random.choice(companies_list, size=len(df))
 df['networking'] = np.random.choice([True, False], size=len(df))
 
 # Generate a mood column
-df['travel_interests'] = np.random.choice(travel_interests, size=len(df))
+df['moods'] = np.random.choice(moods, size=len(df))
 
 # Generate a free_time column
 df['free_time'] = np.random.choice(times, size=len(df))

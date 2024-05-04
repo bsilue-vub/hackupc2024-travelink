@@ -36,7 +36,7 @@ if __name__ == '__main__':
         print('\nDuplicate travellers found:\n')
         print(df.loc[duplicates, 'Traveller Name'])
     else:
-        print('\nNo duplicate travellers found.\n')
+        print('\nNo duplicate travellers found.')
 
 
     # Retrieve list of all cities
@@ -55,4 +55,4 @@ if __name__ == '__main__':
     save_cities_to_file(unique_cities, output_file_path)
     
     # Print completion message
-    print(f"Unique cities have been saved to {output_file_path}.")
+    print(f"Unique cities have been saved.\n")
