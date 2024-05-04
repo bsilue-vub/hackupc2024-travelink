@@ -17,14 +17,14 @@ def get_simultaneous_travellers(df, new_traveller):
 
     """
     # Convert the dates in the dataframe to datetime format if not already done
-    df['Departure Date'] = pd.to_datetime(df['Departure Date'], 
+    df['Arrival Date'] = pd.to_datetime(df['Arrival Date'], 
                                           format='%d/%m/%Y')
     df['Return Date'] = pd.to_datetime(df['Return Date'], 
                                        format='%d/%m/%Y')
     
     # Extract data from the new traveller row
     arrival_city = new_traveller['Arrival City']
-    departure_date = pd.to_datetime(new_traveller['Departure Date'], 
+    arrival_date = pd.to_datetime(new_traveller['Arrival Date'], 
                                     format='%d/%m/%Y')
     return_date = pd.to_datetime(new_traveller['Return Date'], 
                                  format='%d/%m/%Y')
@@ -34,8 +34,8 @@ def get_simultaneous_travellers(df, new_traveller):
 
     # Filter for date overlaps
     overlapping_travellers = same_city_travellers[
-        (same_city_travellers['Departure Date'] <= return_date) &
-        (same_city_travellers['Return Date'] >= departure_date)
+        (same_city_travellers['Arrival Date'] <= return_date) &
+        (same_city_travellers['Return Date'] >= arrival_date)
     ]
     
     return overlapping_travellers

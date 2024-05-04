@@ -1,32 +1,44 @@
 import streamlit as st
 
-# Title of the page
-st.title('My First Streamlit App')
+# Title and mission statement
+# -----------------------------
 
-# Header/Subheader
-st.header('This is a header')
-st.subheader('This is a subheader')
+st.title('Welcome to TraveLink')
+st.text('Our mission: Making your trip fun, meaningful, and hopefully unforgettable.')
 
-# Text
-st.text('Hello Streamlit. This is regular text.')
+# Collecting travel information
+# -----------------------------
 
-# Displaying code
-st.text('This is a code block:')
-st.code('import numpy as np', language='python')
+st.header('Enter Your Travel Information')
 
-# Display data
-st.write('Here is some json data:')
-st.write({'Name': 'Alice', 'Age': 25})
+# Load city and company options from file
+def load_cities(file_path):
+    with open(file_path, 'r') as file:
+        cities = file.read().splitlines()
+    return cities
 
-# Display a table
-import pandas as pd
-df = pd.DataFrame({
-    'first column': [1, 2, 3, 4],
-    'second column': [10, 20, 30, 40]
-})
-st.write('Here is a table:')
-st.table(df)
+cities = load_cities('./src/data/datasets/cities.txt')
+companies = load_cities('./src/data/datasets/companies.txt')
 
-# Display a chart
-st.write('Here is a chart:')
-st.line_chart(df)
+# Dropdown for selecting arrival city
+arrival_city = st.selectbox('Select your arrival city.', cities)
+
+# Input for the company the traveler works for
+company = st.selectbox('Company Name', 
+                       companies)
+
+# Creating columns for the dates to appear side by side
+col1, col2 = st.columns(2)
+with col1:
+    arrival_date = st.date_input('Arrival Date', format="DD/MM/YYYY")
+with col2:
+    return_date = st.date_input('Return Date', format="DD/MM/YYYY")
+
+# Submission button
+if st.button('Submit'):
+    st.success('Travel Information Received')
+    st.write('Arrival City:', arrival_city)
+    st.write('Company:', company)
+    st.write('Arrival Date:', arrival_date)
+    st.write('Return Date:', return_date)
+    # TODO: Insert this retrieved data into a DataFrame and process it further
