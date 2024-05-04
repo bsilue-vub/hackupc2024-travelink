@@ -24,8 +24,10 @@ def get_simultaneous_travellers(df, new_traveller):
     
     # Extract data from the new traveller row
     arrival_city = new_traveller['Arrival City']
-    departure_date = pd.to_datetime(new_traveller['Departure Date'], format='%d/%m/%Y')
-    return_date = pd.to_datetime(new_traveller['Return Date'], format='%d/%m/%Y')
+    departure_date = pd.to_datetime(new_traveller['Departure Date'], 
+                                    format='%d/%m/%Y')
+    return_date = pd.to_datetime(new_traveller['Return Date'], 
+                                 format='%d/%m/%Y')
     
     # Filter for travellers who are going to the same city
     same_city_travellers = df[df['Arrival City'] == arrival_city]
