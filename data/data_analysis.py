@@ -5,15 +5,15 @@ import pandas as pd
 # ------------------------------
 
 # Load the dataset
-df = pd.read_csv('./data/dataset.csv')
+df = pd.read_csv('./data/datasets/dataset.csv')
 
-# Check for duplicates in the "Traveller Name" column
-duplicates = df['Traveller Name'].duplicated(keep=False)  # 'keep=False' marks all duplicates as True
+# Check for duplicates in the 'Traveller Name' column
+duplicates = df['Traveller Name'].duplicated(keep=False)
 
 # Print out duplicate names, if any
 if duplicates.any():
-    print("Duplicate names found in 'Traveller Name' column:")
+    print('Duplicate travellers found:')
     print(df.loc[duplicates, 'Traveller Name'])
 else:
-    print("No duplicate names found in 'Traveller Name' column.")
+    print('No duplicate travellers found.')
 

@@ -3,14 +3,14 @@ import numpy as np
 np.random.seed(0)
 
 # Load dataset
-df = pd.read_csv('./data/dataset.csv')
+df = pd.read_csv('./data/datasets/dataset.csv')
 
 # Define data options
-with open('./data/companies.txt', 'r') as file:
+with open('./data/datasets/companies.txt', 'r') as file:
     companies_list = [line.strip() for line in file]
-moods = ["Relaxation", "Sightseeing", "Adventure", "Any"]
-times = ["Mornings", "Evenings"]
-hotels = ["Hilton Hotel", "The Hotel", "Ibis Hotel", "Elite Hotel", "Novotel"]
+moods = ['Relaxation', 'Sightseeing', 'Adventure', 'Any']
+times = ['Mornings', 'Evenings']
+hotels = ['Hilton Hotel', 'The Hotel', 'Ibis Hotel', 'Elite Hotel', 'Novotel']
 
 # Generate a company column
 df['company'] = np.random.choice(companies_list, size=len(df))
@@ -27,6 +27,6 @@ df['free_time'] = np.random.choice(times, size=len(df))
 # Generate an accommodation column
 df['accommodation'] = np.random.choice(hotels, size=len(df))
 
-
 # Save the updated dataset
-df.to_csv('./data/augmented_dataset.csv', index=False)
+df.to_csv('./data/datasets/augmented_dataset.csv', index=False)
+print('\nData has been augmented.\n')
