@@ -12,8 +12,8 @@ duplicates = df['Traveller Name'].duplicated(keep=False)
 
 # Print out duplicate names, if any
 if duplicates.any():
-    print('Duplicate travellers found:')
+    print('\nDuplicate travellers found:\n')
     print(df.loc[duplicates, 'Traveller Name'])
 else:
-    print('No duplicate travellers found.')
+    print('\nNo duplicate travellers found.\n')
 
