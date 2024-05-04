@@ -12,8 +12,9 @@ def get_simultaneous_travellers(df, new_traveller):
     
     Returns
     -------
-    DataFrame:             A subset of df with entries of people who will be 
-                           in the same city during the overlapping timeframe.
+    simultaneous_travellers (DataFrame):  A subset of df with entries of 
+                                          people who will be in the same city 
+                                          during the overlapping timeframe.
 
     """
     # Convert the dates in the dataframe to datetime format if not already done
@@ -33,26 +34,56 @@ def get_simultaneous_travellers(df, new_traveller):
     same_city_travellers = df[df['Arrival City'] == arrival_city]
 
     # Filter for date overlaps
-    overlapping_travellers = same_city_travellers[
+    simultaneous_travellers = same_city_travellers[
         (same_city_travellers['Arrival Date'] <= return_date) &
         (same_city_travellers['Return Date'] >= arrival_date)
     ]
     
-    return overlapping_travellers
+    return simultaneous_travellers
 
 
-if __name__ == '__main__':
-    # Load dataset
-    df = pd.read_csv('./src/data/datasets/augmented_dataset.csv')
+def get_similar_travellers(df, new_traveller):
+    """"
+    Identify travellers who share similar interests in free time and networking.
+    If networking is false, it will also require matching the company name.
 
-    # Example new traveller
-    new_traveller = pd.DataFrame([{
-        'Arrival City': 'Paris',
-        'Arrival Date': '07/11/2024',
-        'Return Date': '14/11/2024'
-    }]).iloc[0]
+    Arguments
+    ---------
+    df (DataFrame):        The dataframe containing existing traveller data.
+    new_traveller (dict):  A dictionary with new traveller's free time, 
+                           networking, and possibly company information.
 
+    Returns
+    -------
+    similar_travellers (DataFrame):   A subset of df with entries of people 
+                                      who are similar based on the criteria.
+    
+    """
 
-    # Get and print simultaneous traveller
-    simultaneous_travellers = get_simultaneous_travellers(df, new_traveller)
-    print('\n', simultaneous_travellers, '\n')
+    # Filter for travellers who have the same free time preference
+    similar_travellers = df[df['free_time'] == new_traveller['free_time']]
+
+    # Further filter for matching mood preference
+    similar_travellers = similar_travellers[
+        similar_travellers['mood'] == new_traveller['mood']
+    ]
+    
+    # Further filter for matching networking preference
+    similar_travellers = similar_travellers[
+        similar_travellers['networking'] == new_traveller['networking']
+    ]
+    
+    # If networking is True, filter to only match new people,
+    # i.e., people outside the company
+    if new_traveller['networking']:
+        similar_travellers = similar_travellers[
+            similar_travellers['company'] != new_traveller['company']
+        ]
+    # If networking is False, only match people from the company
+    else:
+        similar_travellers = similar_travellers[
+            similar_travellers['company'] == new_traveller['company']
+        ]
+    
+    return similar_travellers
+
