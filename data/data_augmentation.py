@@ -3,7 +3,7 @@ import numpy as np
 np.random.seed(0)
 
 # Load dataset
-df = pd.read_csv('./data/datasets/dataset.csv')
+df = pd.read_csv('./data/datasets/original_dataset.csv')
 
 # Define data options
 with open('./data/datasets/companies.txt', 'r') as file:
