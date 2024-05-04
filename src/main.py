@@ -1,27 +1,34 @@
 import streamlit as st
 
+# Helper functions
+# ----------------
+
+def load_txt_data(file_path):
+    with open(file_path, 'r') as file:
+        data = file.read().splitlines()
+    data = sorted(data)
+    return data
+
+def newlines(amount):
+    for _ in range(amount):
+        st.write("")
+
 # Title and mission statement
 # -----------------------------
 
 st.title('Welcome to TraveLink')
 st.text('Our mission: Making your trip fun, meaningful, and hopefully unforgettable.')
 
-# Collecting travel information
-# -----------------------------
+# Collect travel information
+# --------------------------
 
-st.header('Enter Your Travel Information')
+st.header('Enter your travel information')
 
-# Load city and company options from file
-def load_cities(file_path):
-    with open(file_path, 'r') as file:
-        cities = file.read().splitlines()
-    return cities
-
-cities = load_cities('./src/data/datasets/cities.txt')
-companies = load_cities('./src/data/datasets/companies.txt')
+cities = load_txt_data('./src/data/datasets/cities.txt')
+companies = load_txt_data('./src/data/datasets/companies.txt')
 
 # Dropdown for selecting arrival city
-arrival_city = st.selectbox('Select your arrival city.', cities)
+arrival_city = st.selectbox('Arrival city', cities)
 
 # Input for the company the traveler works for
 company = st.selectbox('Company Name', 
@@ -34,7 +41,30 @@ with col1:
 with col2:
     return_date = st.date_input('Return Date', format="DD/MM/YYYY")
 
-# Submission button
+# Collect interest information
+# ----------------------------
+newlines(1)
+st.header('Tell us more about you')
+
+travel_interests = ['Relaxation', 'Sightseeing', 'Adventure', 'Any']
+
+# Dropdown for selecting travel interest
+travel_interest = st.selectbox('What type travel do you enjoy most?', 
+                               travel_interests)
+
+# Dropdown for selecting networking interest
+networking = st.selectbox('Are you in the mood to network and meet new people?', 
+                               ["Yes", "No"])
+
+# Dropdown for selecting free time
+free_time = st.selectbox('What time of day are you generally free?', 
+                         ["Evenings", "Mornings"])
+
+# Submission
+# ----------
+
+newlines(3)
+
 if st.button('Submit'):
     st.success('Travel Information Received')
     st.write('Arrival City:', arrival_city)

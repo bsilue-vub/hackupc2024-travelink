@@ -1,4 +1,4 @@
-Trip ID,Traveller Name,Arrival Date,Return Date,Departure City,Arrival City,company,networking,mood,free_time,accommodation
+Trip ID,Traveller Name,Arrival Date,Return Date,Departure City,Arrival City,company,networking,travel_interests,free_time,accommodation
 1,Anderson Hudson,08/11/2024,13/11/2024,Barcelona,Paris,Dynamic Retail Group,True,Relaxation,Mornings,Elite Hotel
 2,Zane Osborne,13/08/2024,16/08/2024,Rome,Amsterdam,IronClad Security,True,Relaxation,Mornings,Ibis Hotel
 3,Adrianna Price,01/11/2024,10/11/2024,Paris,Munich,Crimson Consulting,False,Relaxation,Evenings,Novotel
