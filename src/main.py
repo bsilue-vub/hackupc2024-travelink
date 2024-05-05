@@ -3,7 +3,8 @@ import streamlit as st
 from utils.utils import (
     get_simultaneous_travellers,
     get_basic_similar_travellers,
-    get_premium_interest_matching_travellers
+    get_premium_interest_matching_travellers,
+    get_premium_psychology_matching_travellers
 )
 
 # Helper functions
@@ -97,18 +98,18 @@ if submit_button:
     my_tweet = 'Really enjoyed that football match! #sports'
     st.session_state['submitted'] = True
     st.session_state['new_traveller'] = {
-        'Trip': None,
-        'ID': None,
+        'Trip': 'None',
+        'ID': 'None' ,
         'Traveller Name': 'Me',
         'Arrival Date': arrival_date,
         'Return Date': return_date,
-        'Departure City': None,
+        'Departure City': 'None',
         'Arrival City': arrival_city,
         'company': company,
         'networking': networking,
         'mood': mood,
         'free_time': free_time,
-        'accommodation': None,
+        'accommodation': 'None',
         'tweet': my_tweet
     }
 
@@ -141,6 +142,24 @@ if 'submitted' in st.session_state and st.session_state['submitted']:
         # Merge
         matching_travellers = pd.concat([basic_matching_travellers,
                                          interest_matching_travellers], ignore_index=True)
+        matching_travellers = matching_travellers.drop_duplicates()
+    
+    elif plan == 'Premium: Psychology':
+        # Basic
+        basic_matching_travellers = get_basic_similar_travellers(simultaneous_travellers,
+                                                                 new_traveller.iloc[0])
+        # Interest
+        psychology_matching_travellers = get_premium_psychology_matching_travellers(
+            all_travellers_df,
+            new_traveller
+        )
+        psychology_matching_travellers = get_simultaneous_travellers(psychology_matching_travellers,
+                                                                     new_traveller.iloc[0])
+        # Merge
+        matching_travellers = pd.concat([basic_matching_travellers,
+                                         psychology_matching_travellers], ignore_index=True)
+        matching_travellers = matching_travellers.drop_duplicates()
+        
     
     # Hotel recommendations
     # ---------------------

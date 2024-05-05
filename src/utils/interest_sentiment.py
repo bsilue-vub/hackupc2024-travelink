@@ -64,9 +64,6 @@ def main(df):
     processed_df = extract_sentiment_scores(processed_df)
     processed_df = normalize_data(processed_df)
     clustered_df, kmeans_model = cluster_data(processed_df, 5)  
-    grouped = get_names_by_cluster(clustered_df)
-    return grouped
+    grouped_names = get_names_by_cluster(clustered_df)
 
-if __name__ == "__main__":
-    df = load_data('./src/data/datasets/TraveLink_db.csv')
-    main(df)
+    return grouped_names

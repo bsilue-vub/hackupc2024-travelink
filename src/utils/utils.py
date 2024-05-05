@@ -1,5 +1,6 @@
 import pandas as pd
 from utils.interest_sentiment import main as get_interest_sentiment
+from utils.psychology_sentiment import main as get_psychology_sentiment
 
 def get_simultaneous_travellers(df, new_traveller):
     """
@@ -103,10 +104,30 @@ def get_premium_interest_matching_travellers(all_travellers,
     matching_travellers = new_simultaneous_travellers[
         new_simultaneous_travellers['Traveller Name'].isin(interest_match_names)
     ]
-    print(matching_travellers['Arrival City'])
 
     matching_travellers = matching_travellers[matching_travellers['Traveller Name'] != 'Me']
     matching_travellers = matching_travellers.iloc[:, :-3]
 
+    return matching_travellers
+
+def get_premium_psychology_matching_travellers(all_travellers,
+                                               new_traveller):
+    # Get interest groups
+    new_simultaneous_travellers = pd.concat([all_travellers, 
+                                             new_traveller], ignore_index=True)
+    grouped_travellers = get_psychology_sentiment(new_simultaneous_travellers)
+
+    # Get interest match names
+    psychology_match_names = []
+    interest_match_names = None
+    for cluster, names in grouped_travellers:
+        if (names['Traveller Name'] == 'Me').any():
+            psychology_match_names.extend(names['Traveller Name'].tolist())
+
+    matching_travellers = new_simultaneous_travellers[
+        new_simultaneous_travellers['Traveller Name'].isin(psychology_match_names)
+    ]
+    
+    matching_travellers = matching_travellers[matching_travellers['Traveller Name'] != 'Me']
 
     return matching_travellers
