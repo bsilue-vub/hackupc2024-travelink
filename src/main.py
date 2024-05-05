@@ -6,6 +6,7 @@ from utils.utils import (
     get_premium_interest_matching_travellers,
     get_premium_psychology_matching_travellers
 )
+from utils.get_spotify_data import main as get_spotify_genres
 
 # Helper functions
 # ----------------
@@ -21,7 +22,8 @@ def newlines(amount):
         st.write('')
 
 def get_music_genre():
-    return 'classical music'
+    genres = get_spotify_genres()
+    return genres
 
 def get_club_n_pub():
     return 'None'
@@ -210,7 +212,11 @@ if 'submitted' in st.session_state and st.session_state['submitted']:
 
         # Get clubs / pubs
         clubs_n_pubs = matching_travellers['Suggested Club/Pub']
-        matching_clubs_n_pubs = [x for x in clubs_n_pubs if get_music_genre() in x.lower()]
+        matching_clubs_n_pubs = [
+            club_pub for club_pub in clubs_n_pubs
+            if any(genre.lower() in club_pub.lower() for genre in get_music_genre())
+        ]
+        matching_clubs_n_pubs = list(set(matching_clubs_n_pubs))
 
         if matching_clubs_n_pubs != []:
             st.header('Club & pub recommendations')
@@ -222,9 +228,9 @@ if 'submitted' in st.session_state and st.session_state['submitted']:
                     st.write(f'&nbsp;&nbsp;{index + 1}. {item} {arrival_city}', 
                             unsafe_allow_html=True)
                 with col2:
-                    st.button('Get tickets', key=item)
+                    st.button('Get tickets', key=str(index) + item)
 
-        st.markdown('---')
+            st.markdown('---')
     
     # Developer view
     # --------------

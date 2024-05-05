@@ -22,15 +22,15 @@ def extract_top_genres(top_artists):
     return [genre[0] for genre in sorted_genres][:5]  # Top 5 genres
 
 def main():
-    access_token = 'abc'
+    with open('src/utils/keys/token.key', 'r') as file:
+        access_token = file.read()
+    
+    top_genres = None
     if access_token:
         top_artists = get_top_artists(access_token)
         top_genres = extract_top_genres(top_artists)
-        print("Your top genres:")
-        for genre in top_genres:
-            print(genre)
-    else:
-        print("Failed to retrieve access token")
+    
+    return top_genres
    
 
 if __name__ == "__main__":
