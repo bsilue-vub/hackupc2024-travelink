@@ -20,12 +20,18 @@ def newlines(amount):
     for _ in range(amount):
         st.write('')
 
+def get_music_genre():
+    return 'classical music'
+
+def get_club_n_pub():
+    return 'None'
+
 # Load data
 # ---------
 
 cities = load_txt_data('./src/data/datasets/cities.txt')
 companies = load_txt_data('./src/data/datasets/companies.txt')
-all_travellers_df = pd.read_csv('./src/data/datasets/travelink_data.csv')
+all_travellers_df = pd.read_csv('./src/data/datasets/travelink_data_with_music.csv')
 
 # Sidebar
 # -------
@@ -110,7 +116,9 @@ if submit_button:
         'mood': mood,
         'free_time': free_time,
         'accommodation': 'None',
-        'tweet': my_tweet
+        'tweet': my_tweet,
+        'Music Genre': get_music_genre(),
+        'Suggested Club/Pub': get_club_n_pub()
     }
 
 if 'submitted' in st.session_state and st.session_state['submitted']: 
@@ -190,12 +198,32 @@ if 'submitted' in st.session_state and st.session_state['submitted']:
         for index, row in sorted_accommodations.iterrows():
             col1, col2 = st.columns([4, 1])
             with col1:
-                st.write(f'&nbsp;&nbsp;{index + 1}. {str(row["Accommodation"])}  {arrival_city}', 
+                st.write(f'&nbsp;&nbsp;{index + 1}. {str(row["Accommodation"])} {arrival_city}', 
                          unsafe_allow_html=True)
             with col2:
                 st.button('Book now', key=row["Accommodation"])
 
         st.markdown('---')
+
+        # Event recommendations
+        # ---------------------
+
+        # Get clubs / pubs
+        clubs_n_pubs = matching_travellers['Suggested Club/Pub']
+        matching_clubs_n_pubs = [x for x in clubs_n_pubs if get_music_genre() in x.lower()]
+
+        if matching_clubs_n_pubs != []:
+            st.header('Club & pub recommendations')
+            st.write(f'Based on your preferences, we recommend any of the following clubs and pubs:')
+
+            for index, item in enumerate(matching_clubs_n_pubs):
+                col1, col2 = st.columns([4, 1])
+                with col1:
+                    st.write(f'&nbsp;&nbsp;{index + 1}. {item} {arrival_city}', 
+                            unsafe_allow_html=True)
+                with col2:
+                    st.button('Get tickets', key=item)
+
 
     
     # Developer view
