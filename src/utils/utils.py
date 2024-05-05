@@ -1,4 +1,5 @@
 import pandas as pd
+from utils.interest_sentiment import main as get_interest_sentiment
 
 def get_simultaneous_travellers(df, new_traveller):
     """
@@ -41,8 +42,7 @@ def get_simultaneous_travellers(df, new_traveller):
     
     return simultaneous_travellers
 
-
-def get_similar_travellers(df, new_traveller):
+def get_basic_similar_travellers(df, new_traveller):
     """"
     Identify travellers who share similar interests in free time and networking.
     If networking is false, it will also require matching the company name.
@@ -87,3 +87,26 @@ def get_similar_travellers(df, new_traveller):
     
     return similar_travellers
 
+def get_premium_interest_matching_travellers(all_travellers, 
+                                             new_traveller):
+    # Get interest groups
+    new_simultaneous_travellers = pd.concat([all_travellers, 
+                                             new_traveller], ignore_index=True)
+    grouped_travellers = get_interest_sentiment(new_simultaneous_travellers)
+
+    # Get interest match names
+    interest_match_names = None
+    for cluster, names in grouped_travellers:
+        if 'Me' in names.tolist():
+            interest_match_names = set(names.tolist())
+
+    matching_travellers = new_simultaneous_travellers[
+        new_simultaneous_travellers['Traveller Name'].isin(interest_match_names)
+    ]
+    print(matching_travellers['Arrival City'])
+
+    matching_travellers = matching_travellers[matching_travellers['Traveller Name'] != 'Me']
+    matching_travellers = matching_travellers.iloc[:, :-3]
+
+
+    return matching_travellers

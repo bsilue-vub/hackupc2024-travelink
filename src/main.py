@@ -2,7 +2,8 @@ import pandas as pd
 import streamlit as st
 from utils.utils import (
     get_simultaneous_travellers,
-    get_similar_travellers
+    get_basic_similar_travellers,
+    get_premium_interest_matching_travellers
 )
 
 # Helper functions
@@ -23,12 +24,19 @@ def newlines(amount):
 
 cities = load_txt_data('./src/data/datasets/cities.txt')
 companies = load_txt_data('./src/data/datasets/companies.txt')
-travel_df = pd.read_csv('./src/data/datasets/augmented_dataset.csv')
+all_travellers_df = pd.read_csv('./src/data/datasets/travelink_data.csv')
 
 # Sidebar
 # -------
 
 st.sidebar.title('Settings')
+
+st.sidebar.header('Plan')
+plan = st.sidebar.selectbox('Your subscription plan:', ['Basic', 
+                                                        'Premium: Interest', 
+                                                        'Premium: Psychology'])
+
+st.sidebar.header('Mode')
 developer_view = st.sidebar.checkbox("Developer view")
 
 # Title and mission statement
@@ -86,11 +94,12 @@ submit_button = st.button('Submit')
 st.markdown('---')
 
 if submit_button:
+    my_tweet = 'Really enjoyed that football match! #sports'
     st.session_state['submitted'] = True
     st.session_state['new_traveller'] = {
         'Trip': None,
         'ID': None,
-        'Traveller Name': None,
+        'Traveller Name': 'Me',
         'Arrival Date': arrival_date,
         'Return Date': return_date,
         'Departure City': None,
@@ -99,29 +108,48 @@ if submit_button:
         'networking': networking,
         'mood': mood,
         'free_time': free_time,
-        'accommodation': None
+        'accommodation': None,
+        'tweet': my_tweet
     }
 
 if 'submitted' in st.session_state and st.session_state['submitted']: 
 
     # Get new traveller data
-    new_traveller = pd.DataFrame([st.session_state['new_traveller']]).iloc[0]
+    new_traveller = pd.DataFrame([st.session_state['new_traveller']])
+
 
     # Get simultaneous travellers
-    simultaneous_travellers = get_simultaneous_travellers(travel_df, 
-                                                          new_traveller)
-    
-    # Get simultaneous travellers
-    similar_travellers = get_similar_travellers(simultaneous_travellers,
-                                                new_traveller)
+    simultaneous_travellers = get_simultaneous_travellers(all_travellers_df, 
+                                                          new_traveller.iloc[0])
+        
+    # Get similar travellers
+    if plan == 'Basic':
+        matching_travellers = get_basic_similar_travellers(simultaneous_travellers,
+                                                           new_traveller.iloc[0])
+        
+    elif plan == 'Premium: Interest':
+        # Basic
+        basic_matching_travellers = get_basic_similar_travellers(simultaneous_travellers,
+                                                                 new_traveller.iloc[0])
+        # Interest
+        interest_matching_travellers = get_premium_interest_matching_travellers(
+            all_travellers_df,
+            new_traveller
+        )
+        interest_matching_travellers = get_simultaneous_travellers(interest_matching_travellers,
+                                                                   new_traveller.iloc[0])
+        # Merge
+        matching_travellers = pd.concat([basic_matching_travellers,
+                                         interest_matching_travellers], ignore_index=True)
     
     # Hotel recommendations
     # ---------------------
 
     st.header('Hotel recommendations')
-    hotels = ['Hilton Hotel', 'The Hotel', 'Ibis Hotel', 'Elite Hotel', 'Novotel']
+    hotels = ['Hilton Hotel', 'The Hotel', 'Ibis Hotel', 
+              'Elite Hotel', 'Novotel']
     
-    if similar_travellers.empty:
+    if matching_travellers.empty:
         st.write(f'We recommend the following hotels:')
         for hotel in hotels:
             col1, col2 = st.columns([4, 1])  # Adjust column width ratios as needed
@@ -132,8 +160,9 @@ if 'submitted' in st.session_state and st.session_state['submitted']:
     
     else:
         # Count the occurrences of each accommodation and sort them by this count
-        accommodation_counts = similar_travellers['accommodation'].value_counts().reset_index()
-        accommodation_counts.columns = ['Accommodation', 'Count']  # Renaming columns for clarity
+        accommodation_counts = matching_travellers['accommodation']\
+            .value_counts().reset_index()
+        accommodation_counts.columns = ['Accommodation', 'Count']
         
         # Sort accommodations by count in descending order
         sorted_accommodations = accommodation_counts.sort_values(by='Count', ascending=False)
@@ -142,22 +171,18 @@ if 'submitted' in st.session_state and st.session_state['submitted']:
         for index, row in sorted_accommodations.iterrows():
             col1, col2 = st.columns([4, 1])
             with col1:
-                st.write(f'&nbsp;&nbsp;{index + 1}. {str(row["Accommodation"])}  {arrival_city}', unsafe_allow_html=True)
+                st.write(f'&nbsp;&nbsp;{index + 1}. {str(row["Accommodation"])}  {arrival_city}', 
+                         unsafe_allow_html=True)
             with col2:
                 st.button('Book now', key=row["Accommodation"])
 
         st.markdown('---')
 
-    # Event recommendations
-    # ---------------------
-
-    # TODO: Event recommendations
     
     # Developer view
     # --------------
 
     if developer_view:
         st.header('Developer view')
-        st.write('Simultaneous travellers', simultaneous_travellers)
-        st.write('Similar travellers', similar_travellers)
+        st.write('Matching travellers', matching_travellers)
 
