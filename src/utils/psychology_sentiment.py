@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 tokenizer = AutoTokenizer.from_pretrained('Minej/bert-base-personality')
 model = AutoModelForSequenceClassification.from_pretrained('Minej/bert-base-personality')
 
-def predict_personality(texts, batch_size=32):
+def predict_personality(texts, batch_size=128):
     labels = ["Openness", "Conscientiousness", "Extraversion", "Agreeableness", "Neuroticism"]
     results = []
     for i in range(0, len(texts), batch_size):
