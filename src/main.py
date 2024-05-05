@@ -224,7 +224,7 @@ if 'submitted' in st.session_state and st.session_state['submitted']:
                 with col2:
                     st.button('Get tickets', key=item)
 
-
+        st.markdown('---')
     
     # Developer view
     # --------------
